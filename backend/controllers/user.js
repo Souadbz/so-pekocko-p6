@@ -51,9 +51,10 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         /*** création du token pour sécuriser le compte de l'utilisateur ***/
                         token: jwt.sign( /*** la fonction sign dejsonwebtoken pour encoder un nouveau token ***/ {
-                                userId: user._id
-                            }, /*** ce token contient l'ID de l'utilisateur en tant que payload (les données encodées dans le token) ***/
-                            'sl15022010-bz', /*** encoder le token avec une chaine de développement temporaire ***/ {
+                                userId: user._id /*** ce token contient l'ID de l'utilisateur en tant que payload (les données encodées dans le token) ***/
+                            },
+                            /*** encoder le token avec une chaine de développement temporaire ***/
+                            'sl15022010-bz', {
                                 expiresIn: '24h'
                             } /***  la durée de validité du token est 24 heures ***/
                         )

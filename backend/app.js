@@ -2,7 +2,7 @@ const express = require('express'); /*** importer l'express ***/
 const bodyParser = require('body-parser'); /*** importer le bodyParser ***/
 const mongoose = require('mongoose'); /*** importer le package mongoose qui facilite les interactions avec notre base de données MongoDB grâce à des fonctions extrêmement utiles ***/
 const path = require('path'); /*** accés au chemin des fichiers/repertoires ***/
-
+/*** importer les routes à notre application ***/
 const sauceRoutes = require("./routes/sauce"); /*** importer la route sauce ***/
 const userRoutes = require('./routes/user'); /*** importer la route user ***/
 
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 /*** définir la fonction JSON comme middleware global pour l'application ***/
 app.use(bodyParser.json());
 
-/*** les routes attendues par le frontend***/
+/*** les routes attendues par le frontend ***/
 /*** création d'un middleware pour indiquer à Express qu'il faut gérer la ressource images de manière statique (un sous-répertoire de notre répertoire de base, __dirname ) à chaque fois qu'elle reçoit une requête vers la route /images ***/
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use("/api/sauces", sauceRoutes);
