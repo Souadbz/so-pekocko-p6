@@ -1,5 +1,5 @@
 /*** importer le package http de node/ nous avons accés à un objet http qui nous permet de créer un serveur ***/
-const http = require('http');
+const http = require('http'); /*** https est la variante sécurisée du html qui utilise les protocoles SSL/TLS(secure sockets layer/ transport layer security) qui permettent de protéger les données entre les visiteurs et le sites web en les cryptant. Avec Node.js le https recquis le certificat SSL avec un nom de domaine ***/
 /*** importer mon appliation ***/
 const app = require('./app');
 /*** la fonction normalizePort renvoie un port valide, qu'il soit fourni sous la forme d'un numéro ou d'une chaîne ***/
