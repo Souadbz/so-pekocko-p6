@@ -81,7 +81,7 @@ exports.deleteSauce = (req, res, next) => {
                         _id: req.params.id
                     })
                     .then(() => res.status(200).json({
-                        message: 'Objet supprimé !'
+                        message: 'La sauce est supprimée !'
                     }))
                     .catch(error => res.status(400).json({
                         error
