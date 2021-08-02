@@ -2,6 +2,8 @@ const express = require('express'); /*** importer l'express ***/
 const bodyParser = require('body-parser'); /*** importer le bodyParser ***/
 const mongoose = require('mongoose'); /*** importer le package mongoose qui facilite les interactions avec notre base de données MongoDB grâce à des fonctions extrêmement utiles ***/
 const path = require('path'); /*** accés au chemin des fichiers/repertoires ***/
+/*** Définir les variables d'environnement pour masquer les informations de connexion à la base de données  ***/
+require('dotenv').config();
 const helmet = require("helmet"); /*** importer helmet pour sécuriser HTTP headers. ***/
 const mongoSanitize = require('express-mongo-sanitize'); /*** Mongo sanitize nettoie les données fournies par l'utilisateur pour empêcher l'injection d'opérateur MongoDB/ Sans cette désinfection, les utilisateurs malveillants pourraient envoyer un objet contenant un $ opérateur, ou incluant un ., ce qui pourrait changer le contexte d'une opération de base de données  ***/
 const rateLimit = require("express-rate-limit"); /*** importer le module express-rate-limit pour limiter le nombre de requêtes que peut faire un utilisateur ***/
@@ -18,7 +20,7 @@ const userRoutes = require('./routes/user'); /*** importer la route user ***/
 
 /*** la connection à la base de donnée MONGODB ***/
 
-mongoose.connect('mongodb+srv://souad-piquante:20210723@cluster0.qhbsk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })

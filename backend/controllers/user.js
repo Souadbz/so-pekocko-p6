@@ -24,7 +24,7 @@ exports.signup = (req, res, next) => {
     } else {
         bcrypt.hash(req.body.password, 10) /*** hasher ou crypter un mot de passe, l'algorithme fera 10 tours***/
             .then(hash => {
-                /*** création du nouveau utilisateur ***/
+                /*** création un nouveau utilisateur ***/
                 const user = new User({
                     email: req.body.email,
                     /*** passer l'email qui est dans le corps de la requête ***/
@@ -73,7 +73,7 @@ exports.login = (req, res, next) => {
                                 userId: user._id /*** ce token contient l'ID de l'utilisateur en tant que payload (les données encodées dans le token) ***/
                             },
                             /*** encoder le token avec une chaine de développement temporaire ***/
-                            'sl15022010-bz', {
+                            `${process.env.SECRET_KEY}`, {
                                 expiresIn: '24h'
                             } /***  la durée de validité du token est 24 heures ***/
                         )
