@@ -27,9 +27,10 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express(); /*** créer notre application ***/
+const app = express(); /*** appeler express pour créer notre application express ***/
 
-/*** Middleware général/ configurer des Headers sur l'objet réponse pour eviter les erreurs du CORS ***/
+/*** Middleware général/ configurer des Headers sur l'objet réponse pour eviter les erreurs du CORS (Cross Origin Resource Sharing)
+    et assurer que le front-end pourra effectuer des appels vers l'application en toute sécurité.  ***/
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); /*** d'accéder à notre API depuis n'importe quelle origine ***/
@@ -37,11 +38,14 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); /*** d'envoyer des requêtes avec les méthodes mentionnées  ***/
     next();
 });
-/*** définir la fonction JSON comme middleware global pour l'application ***/
+/*** Pour gérer la demande POST provenant de l'application front-end, nous devrons être capables 
+  d'extraire l'objet JSON de la demande. Il nous faudra le package body-parser.
+ *On va définir la fonction JSON comme middleware global pour l'application ***/
 app.use(bodyParser.json());
 
 /*** les routes attendues par le frontend ***/
-/*** création d'un middleware pour indiquer à Express qu'il faut gérer la ressource images de manière statique (un sous-répertoire de notre répertoire de base, __dirname ) à chaque fois qu'elle reçoit une requête vers la route /images ***/
+/*** création d'un middleware pour indiquer à Express qu'il faut gérer la ressource images de manière statique 
+(un sous-répertoire de notre répertoire de base, __dirname ) à chaque fois qu'elle reçoit une requête vers la route /images ***/
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use("/api/sauces", sauceRoutes);
 app.use('/api/auth', userRoutes);

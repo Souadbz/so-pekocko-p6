@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema({
         required: true
     }
 });
-/*** le pluging vérifie que l'email est unique ***/
+/*** le plugin vérifie que l'email est unique ***/
 userSchema.plugin(uniqueValidator);
 
 /*** exporter le modèle User ***/
