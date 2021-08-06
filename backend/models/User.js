@@ -1,5 +1,7 @@
 const mongoose = require('mongoose'); /*** importer le package mongoose ***/
-const uniqueValidator = require('mongoose-unique-validator'); /*** Les erreurs générées par défaut par MongoDB pouvant être difficiles à résoudre, nous installerons un package de validation pour pré-valider les informations avant de les enregistrer  ***/
+/*** Les erreurs générées par défaut par MongoDB pouvant être difficiles à résoudre,
+ *  nous installerons un package de validation pour pré-valider les informations avant de les enregistrer  ***/
+const uniqueValidator = require('mongoose-unique-validator');
 
 /*** création du modèle utilisateur ***/
 const userSchema = mongoose.Schema({

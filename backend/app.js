@@ -5,7 +5,7 @@ const path = require('path'); /*** accés au chemin des fichiers/repertoires ***
 /*** Définir les variables d'environnement pour masquer les informations de connexion à la base de données  ***/
 require('dotenv').config();
 const helmet = require("helmet"); /*** importer helmet pour sécuriser HTTP headers. ***/
-const mongoSanitize = require('express-mongo-sanitize'); /*** Mongo sanitize nettoie les données fournies par l'utilisateur pour empêcher l'injection d'opérateur MongoDB/ Sans cette désinfection, les utilisateurs malveillants pourraient envoyer un objet contenant un $ opérateur, ou incluant un ., ce qui pourrait changer le contexte d'une opération de base de données  ***/
+const mongoSanitize = require('express-mongo-sanitize'); /**Mongo sanitize nettoie les données fournies par l'utilisateur pour empêcher l'injection d'opérateur MongoDB/ Sans cette désinfection, les utilisateurs malveillants pourraient envoyer un objet contenant un $ opérateur, ou incluant un ., ce qui pourrait changer le contexte d'une opération de base de données ***/
 const rateLimit = require("express-rate-limit"); /*** importer le module express-rate-limit pour limiter le nombre de requêtes que peut faire un utilisateur ***/
 
 const limiter = rateLimit({
@@ -18,7 +18,7 @@ const limiter = rateLimit({
 const sauceRoutes = require("./routes/sauce"); /*** importer la route sauce ***/
 const userRoutes = require('./routes/user'); /*** importer la route user ***/
 
-/*** la connection à la base de donnée MONGODB ***/
+/*** la connection de l'API à la base de donnée MONGODB ***/
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
@@ -43,10 +43,11 @@ app.use((req, res, next) => {
  *On va définir la fonction JSON comme middleware global pour l'application ***/
 app.use(bodyParser.json());
 
-/*** les routes attendues par le frontend ***/
+
 /*** création d'un middleware pour indiquer à Express qu'il faut gérer la ressource images de manière statique 
-(un sous-répertoire de notre répertoire de base, __dirname ) à chaque fois qu'elle reçoit une requête vers la route /images ***/
+(un sous-répertoire de notre répertoire de base, __dirname:nom du dossier ) à chaque fois qu'elle reçoit une requête vers la route /images ***/
 app.use('/images', express.static(path.join(__dirname, 'images')));
+/*** les routes attendues par le frontend ***/
 app.use("/api/sauces", sauceRoutes);
 app.use('/api/auth', userRoutes);
 /*** securisé les en-têtes  HTTP ***/

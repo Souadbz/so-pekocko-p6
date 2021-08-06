@@ -1,5 +1,6 @@
 const Sauce = require('../models/Sauce'); /*** importer le modèle sauce ***/
-/*** d'importer le package 'file system' de Node pour accéder au differentes opérations liées aux fichiers ainsi on peut gérer les téléchargements et modifications d'images ***/
+/** d'importer le package 'file system' de Node pour accéder aux differentes opérations liées aux systèmes de fichiers
+ *  ainsi on peut gérer les téléchargements et suppressions d'images ***/
 const fs = require('fs');
 
 /*** POST/ enregistrer et créer une nouvelle sauce ***/
@@ -15,74 +16,83 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save() /*** enregistrer la sauce dans la base de données/ la méthode save renvoie une Promise ***/
         .then(() => res.status(201).json({
-            message: 'Objet enregistré !'
+            /*** Création de ressource/sauce ***/
+            message: 'La sauce est enregistrée !'
         })) /*** reponse au frontend */
         .catch(error => res.status(400).json({
+            /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
             error
         }));
 };
 
 /*** GET/ api/sauces/ récupérer les sauces de la base de donnée MongoDB ***/
 exports.getSauces = (req, res, next) => {
-    Sauce.find()
+    Sauce.find() /*** find va nous retourner une Promise ***/
+        /*** la base de données va retourner le tableau des sauces/reponse 200: ok/
+         *  on récupére le tableau des sauces depuis la base de données ***/
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({
+            /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
             error
         }));
 };
 /*** GET/ /api/sauces/:id/ récupérer une sauce ***/
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({
-            _id: req.params.id
+            _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
         })
-        .then(sauce => res.status(200).json(sauce))
+        .then(sauce => res.status(200).json(sauce)) /*** reponse ok ***/
+        /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 404 pour indiquer que la sauce n'a pas été trouvé.***/
         .catch(error => res.status(404).json({
             error
         }));
 };
 /*** PUT /api/sauces/:id/ modifier la sauce ***/
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ? /*** l'utilisation de l'operateur ternaire ou conditionnel pour voir si req.file existe ou pas */
-        /*** récupérer les information de la sauce et générer la nouvelle image***/
-        /*** si l'image existe ***/
+    const sauceObject = req.file ? /*** l'utilisation de l'objet sauceObject avec l'operateur ternaire ou conditionnel pour voir si req.file existe ou pas */
+        /*** récupérer les informations de la sauce et générer la nouvelle image si l'image existe/modification de l'image ***/
         {
             ...JSON.parse(req.body.sauce),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : {
-            ...req.body
+            ...req.body /*** sinon on récupérer la sauce dans le corps de la requête avec les informations modifiés/sans modifier l'image ***/
         };
-    /*** si il n'existe pas d'image ***/
     Sauce.updateOne({
-            _id: req.params.id
+            _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
         }, {
             ...sauceObject,
-            _id: req.params.id
+            /*** la nouvelle sauce ***/
+
+            _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
         })
         .then(() => res.status(200).json({
+            /*** reponse ok ***/
             message: 'la sauce est modifiée !'
-        }))
+        })) /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
         .catch(error => res.status(400).json({
             error
         }));
 };
 /*** DELETE /api/sauces/:id/ supprimer une sauce ***/
 exports.deleteSauce = (req, res, next) => {
-    /*** avant la suppression on cherche l'objet pour avoir l'url de l'image et accéder au nom du fichier dans la base de données***/
+    /*** avant la suppression on cherche l'objet pour avoir l'url de l'image et donc on va
+     *  accéder au nom du fichier dans la base de données***/
     Sauce.findOne({
-            _id: req.params.id
+            _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
         })
         .then(sauce => {
-            /*** extraire le nom du fichier ***/
+            /*** extraire le nom du fichier dans l'objet sauce***/
             const filename = sauce.imageUrl.split('/images/')[1];
             /*** appeler unlink pour supprimer le fichier ***/
             fs.unlink(`images/${filename}`, () => {
-                /*** supprimer la sauce ***/
+                /*** puis on va supprimer aussi la sauce de la base de données***/
                 Sauce.deleteOne({
-                        _id: req.params.id
+                        _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
                     })
                     .then(() => res.status(200).json({
+                        /*** reponse ok ***/
                         message: 'La sauce est supprimée !'
-                    }))
+                    })) /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
                     .catch(error => res.status(400).json({
                         error
                     }));
@@ -99,12 +109,14 @@ exports.likeDislike = (req, res, next) => {
     if (req.body.like === 1) {
         /*** On ajoute l'utilisateur dans le tableau 'usersLiked' et on incrémente le compteur de 1***/
         Sauce.updateOne({
-                _id: req.params.id
+                _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
             }, {
                 $inc: {
+                    /*** l'opérateur $inc permet d'incrémenter une valeur ***/
                     likes: req.body.like++
                 },
                 $push: {
+                    /*** envoyer le like au tableau userLiked ***/
                     usersLiked: req.body.userId
                 }
             })
@@ -118,12 +130,14 @@ exports.likeDislike = (req, res, next) => {
     else if (req.body.like === -1) {
         /*** On ajoute l'utilisateur dans le tableau 'usersDisliked' et on incrémente de 1 ***/
         Sauce.updateOne({
-                _id: req.params.id
+                _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
             }, {
                 $inc: {
+                    /*** l'opérateur $inc permet d'incrémenter une valeur ***/
                     dislikes: (req.body.like++) * -1
                 },
                 $push: {
+                    /*** envoyer le like au tableau userDisliked ***/
                     usersDisliked: req.body.userId
                 }
             })
@@ -136,20 +150,20 @@ exports.likeDislike = (req, res, next) => {
     } else {
         /*** si l'utilisateur annule un like ou un dislike ***/
         Sauce.findOne({
-                _id: req.params.id
+                _id: req.params.id /*** id de la sauce est le même que l'id du paramètre de la requête ***/
             })
             .then(sauce => {
                 /*** récupérer l'id de l'utilisateur dans le tableau "userLiked" ***/
                 if (sauce.usersLiked.includes(req.body.userId)) {
-                    /*** on décrémente de -1 un like du tableau "userLiked" ***/
+                    /*** modification/on décrémente de -1 un like du tableau "userLiked" ***/
                     Sauce.updateOne({
                             _id: req.params.id
                         }, {
-                            $pull: {
-                                usersLiked: req.body.userId
-                            },
                             $inc: {
                                 likes: -1
+                            },
+                            $pull: {
+                                usersLiked: req.body.userId
                             }
                         })
                         .then((sauce) => {
@@ -162,15 +176,15 @@ exports.likeDislike = (req, res, next) => {
                         }))
                     /*** récupérer l'id de l'utilisateur dans le tableau "userDisliked" ***/
                 } else if (sauce.usersDisliked.includes(req.body.userId)) {
-                    /*** on décrémente de -1 un dislike du tableau "userDisliked" ***/
+                    /*** modification/on décrémente de -1 un dislike du tableau "userDisliked" ***/
                     Sauce.updateOne({
                             _id: req.params.id
                         }, {
-                            $pull: {
-                                usersDisliked: req.body.userId
-                            },
                             $inc: {
                                 dislikes: -1
+                            },
+                            $pull: {
+                                usersDisliked: req.body.userId
                             }
                         })
                         .then((sauce) => {
