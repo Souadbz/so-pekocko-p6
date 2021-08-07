@@ -16,11 +16,9 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save() /*** enregistrer la sauce dans la base de données/ la méthode save renvoie une Promise ***/
         .then(() => res.status(201).json({
-            /*** Création de ressource/sauce ***/
-            message: 'La sauce est enregistrée !'
-        })) /*** reponse au frontend */
+            message: 'la sauce est enregistrée !'
+        })) /*** reponse au frontend/ nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
         .catch(error => res.status(400).json({
-            /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
             error
         }));
 };
@@ -31,8 +29,8 @@ exports.getSauces = (req, res, next) => {
         /*** la base de données va retourner le tableau des sauces/reponse 200: ok/
          *  on récupére le tableau des sauces depuis la base de données ***/
         .then(sauces => res.status(200).json(sauces))
+        /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
         .catch(error => res.status(400).json({
-            /*** nous renverrons une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400.***/
             error
         }));
 };
