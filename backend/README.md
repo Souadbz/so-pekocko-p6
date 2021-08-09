@@ -1,14 +1,14 @@
 # Installation:
 
-- Exécuter la commande npm install pour installer tous les modules nécessaires au fonctionnement de l'application.
-- chargez le package nodemon : #####npm install -g nodemon.
-- lancez le serveur: nodemon server.
+- Exécuter la commande `npm install` pour installer tous les modules nécessaires au fonctionnement de l'application.
+- chargez le package nodemon : `npm install -g nodemon`
+- lancez le serveur: `nodemon server`
 - Exécution de l’api sur http://localhost:3000
 
 ## Indication:
 
-Avant d'accéder à l'application, vous devrez créer un fichier d'environnement nommé .env dans le répertoire racine du dossier backend.
-Dans le fichier .env, ajoutez vos variables d'environnement comme ci-dessous :
+Avant d'accéder à l'application, vous devrez créer un fichier d'environnement nommé `.env` dans le répertoire racine du dossier backend.
+Dans le fichier `.env`, ajoutez vos variables d'environnement comme ci-dessous :
 
 **1- informations base de données (app)**
 
