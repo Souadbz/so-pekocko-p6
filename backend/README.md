@@ -1,7 +1,7 @@
 # Installation:
 
 - Exécuter la commande npm install pour installer tous les modules nécessaires au fonctionnement de l'application.
-- chargez le package nodemon : npm install -g nodemon.
+- chargez le package nodemon : #####npm install -g nodemon.
 - lancez le serveur: nodemon server.
 - Exécution de l’api sur http://localhost:3000
 
